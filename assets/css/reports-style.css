@@ -1,0 +1,180 @@
+/*
+ * Styles for the Reports Plugin Download Form
+ */
+:root {
+    --rp-bg-color: #FFFFFF;
+    --rp-border-color: #e0e0e0;
+    --rp-title-color: #333333;
+    --rp-text-color: #555555;
+    --rp-primary-color: #0d6efd;
+    --rp-link-color: #0d6efd;
+}
+
+.rp-download-box {
+    background-color: var(--rp-bg-color);
+    padding: 30px;
+    border-radius: 8px;
+    border: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    max-width: 500px;
+    margin: 20px auto;
+}
+
+.rp-lead-form .rp-form-field {
+    margin-bottom: 15px;
+}
+
+.rp-lead-form label {
+   display: none;
+}
+
+.rp-lead-form input[type="text"],
+.rp-lead-form input[type="email"],
+.rp-lead-form input[type="tel"],
+.rp-lead-form select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+    background-color: #fff;
+    height: 50px;
+    color: #495057;
+}
+
+.rp-lead-form input::placeholder {
+    color: #6c757d;
+    opacity: 1;
+}
+
+.rp-lead-form select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 16px 12px;
+}
+.rp-lead-form select:invalid {
+   color: #6c757d;
+}
+
+
+.rp-lead-form button {
+    width: 100%;
+    background-color: var(--rp-primary-color);
+    color: #ffffff;
+    border: none;
+    padding: 7px 10px 45px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 600;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+
+.rp-lead-form button:hover {
+    filter: brightness(90%);
+}
+
+.rp-form-error {
+    color: #d9534f;
+    background-color: #f2dede;
+    border: 1px solid #ebccd1;
+    padding: 10px;
+    border-radius: 4px;
+    text-align: center;
+    margin-top: 15px;
+}
+
+.rp-disclaimer {
+    font-size: 13px;
+    line-height: 1.5;
+    color: #6c757d;
+    margin: 20px 0;
+    text-align: left;
+}
+.rp-disclaimer a {
+    color: var(--rp-link-color);
+    text-decoration: underline;
+}
+
+/* Loader Styles */
+.rp-loader {
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid var(--rp-primary-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: rp-spin 1s linear infinite;
+    margin: 20px auto;
+}
+
+@keyframes rp-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Result / Download Button Styles */
+.rp-result {
+    text-align: center;
+}
+
+.rp-result .rp-download-btn {
+    display: inline-block;
+    background-color: #28a745;
+    color: white;
+    padding: 12px 30px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 18px;
+    text-align: center;
+    transition: background-color 0.3s;
+}
+
+.rp-result .rp-download-btn:hover {
+    background-color: #218838;
+}
+
+.rp-result p {
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+/* Styles for content rendered by the [report_content] shortcode */
+.rp-formatted-content {
+    line-height: 1.7;
+    color: #333;
+}
+.rp-formatted-content h1, .rp-formatted-content h2, .rp-formatted-content h3, .rp-formatted-content h4, .rp-formatted-content h5, .rp-formatted-content h6 {
+    margin-top: 1.5em;
+    margin-bottom: 0.8em;
+    line-height: 1.3;
+}
+.rp-formatted-content ul {
+    list-style-type: disc !important;
+    margin: 0 0 1.5em 1.5em !important;
+    padding-left: 0;
+}
+.rp-formatted-content ul li {
+    margin-bottom: 0.6em;
+}
+.rp-formatted-content ol {
+    list-style-type: decimal !important;
+    margin: 0 0 1.5em 1.5em !important;
+    padding-left: 0;
+}
+.rp-formatted-content ol li {
+    margin-bottom: 0.6em;
+}
+.rp-formatted-content p {
+    margin-bottom: 1.2em;
+}
+.rp-formatted-content a {
+    color: var(--rp-link-color);
+}
+

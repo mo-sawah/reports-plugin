@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Reports Plugin
  * Description:       Adds a custom post type for "Reports" with custom fields, download form, and Stripe payments.
- * Version:           2.0.2
+ * Version:           2.0.3
  * Author:            Mohamed Sawah
  * Author URI:        https://sawahsolutions.com/
  * License:           GPL-2.0+
@@ -15,7 +15,7 @@ if ( ! defined( 'WPINC' ) ) {
     die;
 }
 
-define( 'RP_VERSION', '2.0.2' );
+define( 'RP_VERSION', '2.0.3' );
 define( 'RP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'RP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
@@ -435,7 +435,7 @@ function rp_download_form_shortcode_callback() {
                         Download Report
                     </a>
                     <button type="button" id="rp-email-report-btn" class="rp-email-btn" data-email="<?php echo esc_attr($user_email_cookie); ?>">
-                        Email Me the Report
+                        Send Report
                     </button>
                 </div>
                 <div id="rp-email-status" class="rp-email-status" style="display: none;"></div>

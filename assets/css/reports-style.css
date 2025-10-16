@@ -259,12 +259,13 @@
   background: white;
   color: var(--rp-primary-color);
   border: 2px solid var(--rp-primary-color);
-  padding: 12px 30px;
+  padding: 22px 30px;
   border-radius: 6px;
   font-weight: 600;
   font-size: 16px;
   cursor: pointer;
   transition: all 0.3s ease;
+  line-height: 1px;
 }
 
 .rp-email-btn:hover {

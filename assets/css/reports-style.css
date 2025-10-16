@@ -2,179 +2,433 @@
  * Styles for the Reports Plugin Download Form
  */
 :root {
-    --rp-bg-color: #FFFFFF;
-    --rp-border-color: #e0e0e0;
-    --rp-title-color: #333333;
-    --rp-text-color: #555555;
-    --rp-primary-color: #0d6efd;
-    --rp-link-color: #0d6efd;
+  --rp-bg-color: #ffffff;
+  --rp-border-color: #e0e0e0;
+  --rp-title-color: #333333;
+  --rp-text-color: #555555;
+  --rp-primary-color: #0d6efd;
+  --rp-link-color: #0d6efd;
 }
 
 .rp-download-box {
-    background-color: var(--rp-bg-color);
-    padding: 30px;
-    border-radius: 8px;
-    border: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-    max-width: 500px;
-    margin: 20px auto;
+  background-color: var(--rp-bg-color);
+  padding: 30px;
+  border-radius: 8px;
+  border: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  max-width: 500px;
+  margin: 20px auto;
 }
 
+/* ========== LEAD FORM (Free Reports) ========== */
 .rp-lead-form .rp-form-field {
-    margin-bottom: 15px;
+  margin-bottom: 15px;
 }
 
 .rp-lead-form label {
-   display: none;
+  display: none;
 }
 
 .rp-lead-form input[type="text"],
 .rp-lead-form input[type="email"],
 .rp-lead-form input[type="tel"],
 .rp-lead-form select {
-    width: 100%;
-    padding: 12px 15px;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-    font-size: 16px;
-    box-sizing: border-box;
-    background-color: #fff;
-    height: 50px;
-    color: #495057;
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 16px;
+  box-sizing: border-box;
+  background-color: #fff;
+  height: 50px;
+  color: #495057;
 }
 
 .rp-lead-form input::placeholder {
-    color: #6c757d;
-    opacity: 1;
+  color: #6c757d;
+  opacity: 1;
 }
 
 .rp-lead-form select {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 0.75rem center;
-    background-size: 16px 12px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px 12px;
 }
 .rp-lead-form select:invalid {
-   color: #6c757d;
+  color: #6c757d;
 }
 
-
 .rp-lead-form button {
-    width: 100%;
-    background-color: var(--rp-primary-color);
-    color: #ffffff;
-    border: none;
-    padding: 7px 10px 45px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 18px;
-    font-weight: 600;
-    transition: background-color 0.3s;
-    margin-top: 10px;
+  width: 100%;
+  background-color: var(--rp-primary-color);
+  color: #ffffff;
+  border: none;
+  padding: 15px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 600;
+  transition: background-color 0.3s;
+  margin-top: 10px;
 }
 
 .rp-lead-form button:hover {
-    filter: brightness(90%);
+  filter: brightness(90%);
 }
 
+/* ========== PURCHASE FORM (Paid Reports) ========== */
+.rp-purchase-info {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.rp-purchase-info h3 {
+  font-size: 24px;
+  margin: 0 0 20px 0;
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.rp-price-display {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 5px;
+  margin-bottom: 20px;
+}
+
+.rp-currency-symbol {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.rp-price-amount {
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--rp-primary-color);
+  line-height: 1;
+}
+
+.rp-currency-code {
+  font-size: 18px;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.rp-purchase-benefits {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 25px 0;
+  text-align: left;
+}
+
+.rp-purchase-benefits li {
+  padding: 8px 0;
+  font-size: 15px;
+  color: #495057;
+}
+
+.rp-purchase-form .rp-form-field {
+  margin-bottom: 15px;
+}
+
+.rp-purchase-form input[type="text"],
+.rp-purchase-form input[type="email"] {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 16px;
+  box-sizing: border-box;
+  background-color: #fff;
+  height: 50px;
+  color: #495057;
+}
+
+.rp-purchase-form input::placeholder {
+  color: #6c757d;
+}
+
+.rp-buy-now-btn {
+  width: 100%;
+  background: linear-gradient(135deg, var(--rp-primary-color) 0%, #0056b3 100%);
+  color: #ffffff;
+  border: none;
+  padding: 16px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 4px 12px rgba(0, 115, 230, 0.3);
+}
+
+.rp-buy-now-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 115, 230, 0.4);
+}
+
+.rp-buy-now-btn:active {
+  transform: translateY(0);
+}
+
+.rp-btn-icon {
+  font-size: 20px;
+  transition: transform 0.3s ease;
+}
+
+.rp-buy-now-btn:hover .rp-btn-icon {
+  transform: translateX(5px);
+}
+
+.rp-secure-payment {
+  text-align: center;
+  font-size: 13px;
+  color: #6c757d;
+  margin-top: 15px;
+}
+
+/* ========== PURCHASED STATE ========== */
+.rp-purchased-container {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.rp-success-icon {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+  font-size: 48px;
+  line-height: 80px;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  font-weight: bold;
+}
+
+.rp-purchased-container h3 {
+  font-size: 24px;
+  margin: 0 0 10px 0;
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.rp-purchased-container p {
+  color: #6c757d;
+  margin-bottom: 25px;
+}
+
+.rp-action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.rp-download-btn {
+  display: inline-block;
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+  padding: 14px 30px;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 16px;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+.rp-download-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(40, 167, 69, 0.4);
+  color: white;
+}
+
+.rp-email-btn {
+  background: white;
+  color: var(--rp-primary-color);
+  border: 2px solid var(--rp-primary-color);
+  padding: 12px 30px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.rp-email-btn:hover {
+  background: var(--rp-primary-color);
+  color: white;
+}
+
+.rp-email-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.rp-email-status {
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.rp-email-status.rp-email-success {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.rp-email-status.rp-email-error {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+/* ========== COMMON ELEMENTS ========== */
 .rp-form-error {
-    color: #d9534f;
-    background-color: #f2dede;
-    border: 1px solid #ebccd1;
-    padding: 10px;
-    border-radius: 4px;
-    text-align: center;
-    margin-top: 15px;
+  color: #d9534f;
+  background-color: #f2dede;
+  border: 1px solid #ebccd1;
+  padding: 10px;
+  border-radius: 4px;
+  text-align: center;
+  margin-top: 15px;
 }
 
 .rp-disclaimer {
-    font-size: 13px;
-    line-height: 1.5;
-    color: #6c757d;
-    margin: 20px 0;
-    text-align: left;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #6c757d;
+  margin: 20px 0;
+  text-align: left;
 }
+
 .rp-disclaimer a {
-    color: var(--rp-link-color);
-    text-decoration: underline;
+  color: var(--rp-link-color);
+  text-decoration: underline;
 }
 
 /* Loader Styles */
 .rp-loader {
-    border: 5px solid #f3f3f3;
-    border-top: 5px solid var(--rp-primary-color);
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    animation: rp-spin 1s linear infinite;
-    margin: 20px auto;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid var(--rp-primary-color);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: rp-spin 1s linear infinite;
+  margin: 20px auto;
 }
 
 @keyframes rp-spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
-/* Result / Download Button Styles */
+/* Result / Download Button Styles (for free reports) */
 .rp-result {
-    text-align: center;
+  text-align: center;
 }
 
 .rp-result .rp-download-btn {
-    display: inline-block;
-    background-color: #28a745;
-    color: white;
-    padding: 12px 30px;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: bold;
-    font-size: 18px;
-    text-align: center;
-    transition: background-color 0.3s;
+  display: inline-block;
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+  padding: 12px 30px;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 18px;
+  text-align: center;
+  transition: all 0.3s ease;
 }
 
 .rp-result .rp-download-btn:hover {
-    background-color: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(40, 167, 69, 0.4);
 }
 
 .rp-result p {
-    margin-bottom: 15px;
-    font-size: 16px;
+  margin-bottom: 15px;
+  font-size: 16px;
 }
 
 /* Styles for content rendered by the [report_content] shortcode */
 .rp-formatted-content {
-    line-height: 1.7;
-    color: #333;
-}
-.rp-formatted-content h1, .rp-formatted-content h2, .rp-formatted-content h3, .rp-formatted-content h4, .rp-formatted-content h5, .rp-formatted-content h6 {
-    margin-top: 1.5em;
-    margin-bottom: 0.8em;
-    line-height: 1.3;
-}
-.rp-formatted-content ul {
-    list-style-type: disc !important;
-    margin: 0 0 1.5em 1.5em !important;
-    padding-left: 0;
-}
-.rp-formatted-content ul li {
-    margin-bottom: 0.6em;
-}
-.rp-formatted-content ol {
-    list-style-type: decimal !important;
-    margin: 0 0 1.5em 1.5em !important;
-    padding-left: 0;
-}
-.rp-formatted-content ol li {
-    margin-bottom: 0.6em;
-}
-.rp-formatted-content p {
-    margin-bottom: 1.2em;
-}
-.rp-formatted-content a {
-    color: var(--rp-link-color);
+  line-height: 1.7;
+  color: #333;
 }
 
+.rp-formatted-content h1,
+.rp-formatted-content h2,
+.rp-formatted-content h3,
+.rp-formatted-content h4,
+.rp-formatted-content h5,
+.rp-formatted-content h6 {
+  margin-top: 1.5em;
+  margin-bottom: 0.8em;
+  line-height: 1.3;
+}
+
+.rp-formatted-content ul {
+  list-style-type: disc !important;
+  margin: 0 0 1.5em 1.5em !important;
+  padding-left: 0;
+}
+
+.rp-formatted-content ul li {
+  margin-bottom: 0.6em;
+}
+
+.rp-formatted-content ol {
+  list-style-type: decimal !important;
+  margin: 0 0 1.5em 1.5em !important;
+  padding-left: 0;
+}
+
+.rp-formatted-content ol li {
+  margin-bottom: 0.6em;
+}
+
+.rp-formatted-content p {
+  margin-bottom: 1.2em;
+}
+
+.rp-formatted-content a {
+  color: var(--rp-link-color);
+}
+
+/* ========== RESPONSIVE DESIGN ========== */
+@media (max-width: 600px) {
+  .rp-download-box {
+    padding: 20px;
+    margin: 10px;
+  }
+
+  .rp-price-amount {
+    font-size: 36px;
+  }
+
+  .rp-purchase-info h3 {
+    font-size: 20px;
+  }
+
+  .rp-action-buttons {
+    gap: 10px;
+  }
+}

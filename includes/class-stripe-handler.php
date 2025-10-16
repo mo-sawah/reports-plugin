@@ -268,23 +268,40 @@ class RP_Stripe_Handler {
         $report_title = get_the_title($report_id);
         $report_url = get_permalink($report_id);
         $download_link = get_post_meta($report_id, '_rp_download_link', true);
+        $site_name = get_bloginfo('name');
         
-        $subject = 'Your Purchase Confirmation - ' . $report_title;
+        $subject = 'Purchase Confirmation - ' . $report_title;
         
-        $message = "Hi " . $first_name . ",\n\n";
-        $message .= "Thank you for your purchase!\n\n";
-        $message .= "Report: " . $report_title . "\n\n";
-        $message .= "You can access your report at:\n";
-        $message .= $report_url . "\n\n";
-        $message .= "Direct download link:\n";
-        $message .= $download_link . "\n\n";
-        $message .= "This link will remain active for your records.\n\n";
-        $message .= "If you have any questions, please don't hesitate to contact us.\n\n";
-        $message .= "Best regards,\n";
-        $message .= get_bloginfo('name');
+        // Create HTML email
+        $message = "<!DOCTYPE html><html><head><meta charset='UTF-8'></head><body style='font-family: Arial, sans-serif; line-height: 1.6; color: #333;'>";
+        $message .= "<div style='max-width: 600px; margin: 0 auto; padding: 20px;'>";
+        $message .= "<h2 style='color: #2271b1;'>Hi " . esc_html($first_name) . ",</h2>";
+        $message .= "<p style='font-size: 16px;'>Thank you for your purchase!</p>";
+        $message .= "<div style='background: #f9f9f9; padding: 20px; border-radius: 5px; margin: 20px 0;'>";
+        $message .= "<p style='margin: 0 0 10px 0;'><strong>Report:</strong> " . esc_html($report_title) . "</p>";
+        $message .= "</div>";
+        $message .= "<p>You can access your report at any time:</p>";
+        $message .= "<div style='text-align: center; margin: 30px 0;'>";
+        $message .= "<a href='" . esc_url($report_url) . "' style='display: inline-block; background: #2271b1; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 0 10px 10px 0;'>View Report Page</a>";
+        $message .= "<a href='" . esc_url($download_link) . "' style='display: inline-block; background: #28a745; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 0 10px 10px 0;'>Download Now</a>";
+        $message .= "</div>";
+        $message .= "<p style='font-size: 14px; color: #666;'>Direct download link: <a href='" . esc_url($download_link) . "'>" . esc_url($download_link) . "</a></p>";
+        $message .= "<hr style='margin: 30px 0; border: none; border-top: 1px solid #ddd;'>";
+        $message .= "<p style='font-size: 12px; color: #666;'>These links will remain active for your records. If you have any questions, please don't hesitate to contact us.</p>";
+        $message .= "<p style='font-size: 12px; color: #666;'>Best regards,<br>" . esc_html($site_name) . "</p>";
+        $message .= "</div></body></html>";
         
-        $headers = array('Content-Type: text/plain; charset=UTF-8');
+        $headers = array(
+            'Content-Type: text/html; charset=UTF-8',
+            'From: ' . $site_name . ' <noreply@' . str_replace('www.', '', parse_url(home_url(), PHP_URL_HOST)) . '>'
+        );
         
-        wp_mail($email, $subject, $message, $headers);
+        $sent = wp_mail($email, $subject, $message, $headers);
+        
+        if (!$sent) {
+            error_log('Failed to send purchase confirmation email to: ' . $email);
+        }
+        
+        return $sent;
     }
 }

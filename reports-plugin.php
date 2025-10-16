@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Reports Plugin
  * Description:       Adds a custom post type for "Reports" with custom fields, download form, and Stripe payments.
- * Version:           2.0.3
+ * Version:           2.0.4
  * Author:            Mohamed Sawah
  * Author URI:        https://sawahsolutions.com/
  * License:           GPL-2.0+
@@ -15,7 +15,7 @@ if ( ! defined( 'WPINC' ) ) {
     die;
 }
 
-define( 'RP_VERSION', '2.0.3' );
+define( 'RP_VERSION', '2.0.4' );
 define( 'RP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'RP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
@@ -546,6 +546,12 @@ function rp_create_checkout_session_callback() {
         wp_send_json_error('Invalid data provided.');
     }
     
+    // Check if user already purchased this report
+    $verifier = new RP_Purchase_Verification();
+    if ($verifier->verify_purchase($email, $post_id)) {
+        wp_send_json_error('You have already purchased this report. Please refresh the page.');
+    }
+    
     $stripe_handler = new RP_Stripe_Handler();
     $result = $stripe_handler->create_checkout_session($post_id, $email, $first_name, $last_name);
     
@@ -579,21 +585,38 @@ function rp_email_report_callback() {
     
     $download_link = get_post_meta($post_id, '_rp_download_link', true);
     $report_title = get_the_title($post_id);
+    $site_name = get_bloginfo('name');
     
     $subject = 'Your Report: ' . $report_title;
-    $message = "Thank you for your purchase!\n\n";
-    $message .= "You can download your report here:\n";
-    $message .= $download_link . "\n\n";
-    $message .= "This link will remain active for your records.\n\n";
-    $message .= "Best regards,\n";
-    $message .= get_bloginfo('name');
     
-    $headers = array('Content-Type: text/plain; charset=UTF-8');
+    // Create HTML email
+    $message = "<!DOCTYPE html><html><head><meta charset='UTF-8'></head><body style='font-family: Arial, sans-serif; line-height: 1.6; color: #333;'>";
+    $message .= "<div style='max-width: 600px; margin: 0 auto; padding: 20px;'>";
+    $message .= "<h2 style='color: #2271b1;'>Thank you for your purchase!</h2>";
+    $message .= "<p>You can download your report using the button below:</p>";
+    $message .= "<div style='text-align: center; margin: 30px 0;'>";
+    $message .= "<a href='" . esc_url($download_link) . "' style='display: inline-block; background: #28a745; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold;'>Download Report</a>";
+    $message .= "</div>";
+    $message .= "<p><strong>Report:</strong> " . esc_html($report_title) . "</p>";
+    $message .= "<p>Or copy this link: <a href='" . esc_url($download_link) . "'>" . esc_url($download_link) . "</a></p>";
+    $message .= "<hr style='margin: 30px 0; border: none; border-top: 1px solid #ddd;'>";
+    $message .= "<p style='font-size: 12px; color: #666;'>This link will remain active for your records.</p>";
+    $message .= "<p style='font-size: 12px; color: #666;'>Best regards,<br>" . esc_html($site_name) . "</p>";
+    $message .= "</div></body></html>";
     
-    if (wp_mail($email, $subject, $message, $headers)) {
-        wp_send_json_success('Email sent successfully!');
+    $headers = array(
+        'Content-Type: text/html; charset=UTF-8',
+        'From: ' . $site_name . ' <noreply@' . str_replace('www.', '', parse_url(home_url(), PHP_URL_HOST)) . '>'
+    );
+    
+    $sent = wp_mail($email, $subject, $message, $headers);
+    
+    if ($sent) {
+        wp_send_json_success('Email sent successfully! Check your inbox.');
     } else {
-        wp_send_json_error('Failed to send email. Please try again.');
+        // Log the error
+        error_log('Failed to send email to: ' . $email . ' for report: ' . $report_title);
+        wp_send_json_error('Failed to send email. Please contact support or download directly using the button above.');
     }
 }
 add_action('wp_ajax_rp_email_report', 'rp_email_report_callback');

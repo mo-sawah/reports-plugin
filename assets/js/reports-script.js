@@ -182,21 +182,21 @@ jQuery(document).ready(function ($) {
         nonce: rp_ajax_object.nonce,
       },
       success: function (response) {
-        button.prop("disabled", false).text("Email Me the Report");
+        button.prop("disabled", false).text("Send Report");
         if (response.success) {
           statusDiv
-            .text("✓ Email sent successfully! Check your inbox.")
+            .text("✓ " + response.data)
             .addClass("rp-email-success")
             .show();
         } else {
           statusDiv
-            .text("Failed to send email. Please try again.")
+            .text(response.data || "Failed to send email. Please try again.")
             .addClass("rp-email-error")
             .show();
         }
       },
       error: function () {
-        button.prop("disabled", false).text("Email Me the Report");
+        button.prop("disabled", false).text("Send Report");
         statusDiv
           .text("A server error occurred. Please try again.")
           .addClass("rp-email-error")

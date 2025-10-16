@@ -15,8 +15,9 @@ class RP_Stripe_Handler {
     private $publishable_key;
     
     public function __construct() {
-        $this->secret_key = get_option('rp_stripe_secret_key', '');
-        $this->publishable_key = get_option('rp_stripe_publishable_key', '');
+        $stripe_settings = get_option('rp_stripe_settings');
+        $this->secret_key = !empty($stripe_settings['stripe_secret_key']) ? $stripe_settings['stripe_secret_key'] : '';
+        $this->publishable_key = !empty($stripe_settings['stripe_publishable_key']) ? $stripe_settings['stripe_publishable_key'] : '';
     }
     
     /**

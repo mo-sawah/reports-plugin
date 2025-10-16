@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Reports Plugin
  * Description:       Adds a custom post type for "Reports" with custom fields, download form, and Stripe payments.
- * Version:           2.0.0
+ * Version:           2.0.1
  * Author:            Mohamed Sawah
  * Author URI:        https://sawahsolutions.com/
  * License:           GPL-2.0+
@@ -15,7 +15,7 @@ if ( ! defined( 'WPINC' ) ) {
     die;
 }
 
-define( 'RP_VERSION', '2.0.0' );
+define( 'RP_VERSION', '2.0.1' );
 define( 'RP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'RP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
@@ -110,7 +110,65 @@ function rp_meta_box_callback( $post ) {
     $currency = get_post_meta( $post->ID, '_rp_currency', true );
     if (empty($currency)) $currency = 'USD';
     ?>
-    <style>.rp-meta-box table{width:100%}.rp-meta-box table td{padding:10px 5px}.rp-meta-box table input,.rp-meta-box table select{width:100%}.rp-meta-box label{font-weight:700}.rp-file-uploader{display:flex;align-items:center;gap:10px}.rp-paid-fields{margin-top:15px;padding:15px;background:#f9f9f9;border-left:4px solid #2271b1;display:none}.rp-paid-fields.active{display:block}</style>
+    <style>
+        .rp-meta-box table{width:100%}
+        .rp-meta-box table td{padding:10px 5px}
+        .rp-meta-box table input,.rp-meta-box table select{width:100%}
+        .rp-meta-box label{font-weight:700}
+        .rp-file-uploader{display:flex;align-items:center;gap:10px}
+        .rp-paid-fields{margin-top:15px;padding:15px;background:#f9f9f9;border-left:4px solid #2271b1;display:none}
+        .rp-paid-fields.active{display:block}
+        
+        /* Toggle Switch Styles */
+        .rp-toggle-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .rp-toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+        .rp-toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .rp-toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 26px;
+        }
+        .rp-toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .rp-toggle-slider {
+            background-color: #2271b1;
+        }
+        input:checked + .rp-toggle-slider:before {
+            transform: translateX(24px);
+        }
+        .rp-toggle-label {
+            font-weight: normal;
+            margin: 0;
+        }
+    </style>
     <div class="rp-meta-box">
         <p>Upload the report file or paste the direct download link below.</p>
         <table>
@@ -145,10 +203,13 @@ function rp_meta_box_callback( $post ) {
             <tr>
                 <td><label for="rp_is_paid">Monetization</label></td>
                 <td>
-                    <label style="font-weight:normal;display:inline-flex;align-items:center;gap:8px;">
-                        <input type="checkbox" id="rp_is_paid" name="rp_is_paid" value="1" <?php checked($is_paid, '1'); ?>>
-                        Make this report paid
-                    </label>
+                    <div class="rp-toggle-wrapper">
+                        <label class="rp-toggle-switch">
+                            <input type="checkbox" id="rp_is_paid" name="rp_is_paid" value="1" <?php checked($is_paid, '1'); ?>>
+                            <span class="rp-toggle-slider"></span>
+                        </label>
+                        <label for="rp_is_paid" class="rp-toggle-label">Make this report paid</label>
+                    </div>
                     <div id="rp_paid_fields" class="rp-paid-fields <?php echo ($is_paid == '1') ? 'active' : ''; ?>">
                         <table style="margin:0;">
                             <tr>
@@ -262,8 +323,15 @@ function rp_download_form_shortcode_callback() {
         'is_paid' => $is_paid,
         'price' => $price,
         'currency' => $currency,
-        'stripe_public_key' => get_option('rp_stripe_publishable_key', ''),
+        'stripe_public_key' => '',
     );
+    
+    // Get Stripe publishable key if this is a paid report
+    if ($is_paid == '1') {
+        $stripe_settings = get_option('rp_stripe_settings');
+        $ajax_data['stripe_public_key'] = !empty($stripe_settings['stripe_publishable_key']) ? $stripe_settings['stripe_publishable_key'] : '';
+    }
+    
     wp_localize_script( 'rp-script', 'rp_ajax_object', $ajax_data );
     
     // Load Stripe.js if paid
@@ -592,10 +660,11 @@ function rp_stripe_section_callback() {
 }
 
 function rp_stripe_field_callback($args) {
+    $options = get_option('rp_stripe_settings');
     $id = esc_attr($args['id']);
     $type = esc_attr($args['type']);
-    $value = get_option('rp_' . $id, '');
-    echo "<input type='{$type}' name='rp_{$id}' value='" . esc_attr($value) . "' class='regular-text' style='width: 400px;'>";
+    $value = !empty($options[$id]) ? esc_attr($options[$id]) : '';
+    echo "<input type='{$type}' name='rp_stripe_settings[{$id}]' value='" . esc_attr($value) . "' class='regular-text' style='width: 400px;'>";
     if ($id == 'stripe_secret_key') {
         echo "<p class='description'>Your secret key will be stored securely and never displayed.</p>";
     }

@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Reports Plugin
  * Description:       Adds a custom post type for "Reports" with custom fields, download form, and Stripe payments.
- * Version:           2.0.1
+ * Version:           2.0.2
  * Author:            Mohamed Sawah
  * Author URI:        https://sawahsolutions.com/
  * License:           GPL-2.0+
@@ -15,7 +15,7 @@ if ( ! defined( 'WPINC' ) ) {
     die;
 }
 
-define( 'RP_VERSION', '2.0.1' );
+define( 'RP_VERSION', '2.0.2' );
 define( 'RP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'RP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
@@ -360,9 +360,26 @@ function rp_download_form_shortcode_callback() {
     // Check if user already purchased this report
     $user_email_cookie = isset($_COOKIE['rp_user_email']) ? sanitize_email($_COOKIE['rp_user_email']) : '';
     $has_purchased = false;
-    if ($is_paid == '1' && !empty($user_email_cookie)) {
-        $verifier = new RP_Purchase_Verification();
-        $has_purchased = $verifier->verify_purchase($user_email_cookie, $post_id);
+    
+    // Also check for session_id in URL (returning from Stripe)
+    $session_id = isset($_GET['session_id']) ? sanitize_text_field($_GET['session_id']) : '';
+    
+    if ($is_paid == '1') {
+        if (!empty($user_email_cookie)) {
+            $verifier = new RP_Purchase_Verification();
+            $has_purchased = $verifier->verify_purchase($user_email_cookie, $post_id);
+        }
+        
+        // If returning from Stripe with session_id, verify and record purchase
+        if (!$has_purchased && !empty($session_id)) {
+            $stripe_handler = new RP_Stripe_Handler();
+            $purchase_result = $stripe_handler->verify_and_record_session($session_id, $post_id);
+            if ($purchase_result['success']) {
+                $has_purchased = true;
+                $user_email_cookie = $purchase_result['email'];
+                setcookie('rp_user_email', $user_email_cookie, time() + (86400 * 365), '/');
+            }
+        }
     }
 
     ob_start();

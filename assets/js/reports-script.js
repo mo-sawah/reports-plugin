@@ -244,12 +244,23 @@ jQuery(document).ready(function ($) {
    * Check for payment status in URL
    */
   const urlParams = new URLSearchParams(window.location.search);
+  const sessionId = urlParams.get("session_id");
   const paymentStatus = urlParams.get("payment");
 
-  if (paymentStatus === "success") {
-    // Reload without query parameter to show purchased state
-    window.history.replaceState({}, document.title, window.location.pathname);
-    window.location.reload();
+  if (sessionId) {
+    // Returning from successful Stripe payment
+    const downloadBox = $("#rp-download-box");
+    if ($("#rp-purchase-container").length || $("#rp-form-container").length) {
+      // Show processing message
+      downloadBox.html(
+        '<div style="text-align:center;padding:20px;"><div class="rp-loader"></div><p style="margin-top:20px;">Processing your purchase...</p></div>'
+      );
+
+      // Reload after 2 seconds to show purchased state
+      setTimeout(function () {
+        window.location.href = window.location.pathname;
+      }, 2000);
+    }
   } else if (paymentStatus === "cancelled") {
     // Show cancellation message
     $("#rp-form-error")

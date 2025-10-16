@@ -65,7 +65,7 @@ class RP_Stripe_Handler {
                 ]],
                 'mode' => 'payment',
                 'customer_email' => $email,
-                'success_url' => get_permalink($report_id) . '?payment=success',
+                'success_url' => get_permalink($report_id) . '?session_id={CHECKOUT_SESSION_ID}',
                 'cancel_url' => get_permalink($report_id) . '?payment=cancelled',
                 'metadata' => [
                     'report_id' => $report_id,
@@ -95,6 +95,77 @@ class RP_Stripe_Handler {
                 'success' => false,
                 'message' => 'An error occurred. Please try again.'
             );
+        }
+    }
+    
+    /**
+     * Verify and record a checkout session when user returns
+     */
+    public function verify_and_record_session($session_id, $report_id) {
+        if (empty($this->secret_key)) {
+            return array('success' => false, 'message' => 'Stripe not configured');
+        }
+        
+        try {
+            \Stripe\Stripe::setApiKey($this->secret_key);
+            
+            // Retrieve the session
+            $session = \Stripe\Checkout\Session::retrieve($session_id);
+            
+            // Check if payment was successful
+            if ($session->payment_status !== 'paid') {
+                return array('success' => false, 'message' => 'Payment not completed');
+            }
+            
+            global $wpdb;
+            $table_name = $wpdb->prefix . 'reports_purchases';
+            
+            // Check if already recorded
+            $exists = $wpdb->get_var($wpdb->prepare(
+                "SELECT id FROM $table_name WHERE stripe_session_id = %s",
+                $session_id
+            ));
+            
+            if ($exists) {
+                // Already recorded, just return success
+                $user_email = isset($session->metadata->user_email) ? $session->metadata->user_email : $session->customer_email;
+                return array('success' => true, 'email' => $user_email);
+            }
+            
+            // Get metadata
+            $user_email = isset($session->metadata->user_email) ? $session->metadata->user_email : $session->customer_email;
+            $first_name = isset($session->metadata->first_name) ? $session->metadata->first_name : '';
+            $last_name = isset($session->metadata->last_name) ? $session->metadata->last_name : '';
+            
+            // Get amount and currency
+            $amount = $session->amount_total / 100;
+            $currency = strtoupper($session->currency);
+            
+            // Record purchase
+            $data = array(
+                'report_id' => $report_id,
+                'user_email' => $user_email,
+                'stripe_session_id' => $session_id,
+                'stripe_payment_intent' => isset($session->payment_intent) ? $session->payment_intent : '',
+                'amount' => $amount,
+                'currency' => $currency,
+                'purchase_date' => current_time('mysql'),
+                'download_count' => 0,
+            );
+            
+            $result = $wpdb->insert($table_name, $data);
+            
+            if ($result) {
+                // Send confirmation email
+                $this->send_purchase_confirmation_email($user_email, $report_id, $first_name, $last_name);
+                return array('success' => true, 'email' => $user_email);
+            } else {
+                return array('success' => false, 'message' => 'Database error');
+            }
+            
+        } catch (Exception $e) {
+            error_log('Session verification error: ' . $e->getMessage());
+            return array('success' => false, 'message' => $e->getMessage());
         }
     }
     

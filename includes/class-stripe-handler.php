@@ -39,6 +39,20 @@ class RP_Stripe_Handler {
             $currency = get_post_meta($report_id, '_rp_currency', true);
             $report_title = get_the_title($report_id);
             
+            // Get featured image URL
+            $image_url = get_the_post_thumbnail_url($report_id, 'medium');
+            if (empty($image_url)) {
+                // Fallback to a default image or site logo
+                $custom_logo_id = get_theme_mod('custom_logo');
+                if ($custom_logo_id) {
+                    $image_url = wp_get_attachment_image_url($custom_logo_id, 'medium');
+                }
+            }
+            
+            // Get excerpt for description
+            $post = get_post($report_id);
+            $description = !empty($post->post_excerpt) ? wp_trim_words($post->post_excerpt, 20) : 'Comprehensive industry report with detailed insights and analysis.';
+            
             if (empty($price) || $price <= 0) {
                 return array(
                     'success' => false,
@@ -49,16 +63,24 @@ class RP_Stripe_Handler {
             // Convert price to cents (Stripe uses smallest currency unit)
             $amount = intval($price * 100);
             
+            // Prepare product data
+            $product_data = array(
+                'name' => $report_title,
+                'description' => $description,
+            );
+            
+            // Add image if available
+            if (!empty($image_url)) {
+                $product_data['images'] = array($image_url);
+            }
+            
             // Create checkout session
             $session = \Stripe\Checkout\Session::create([
                 'payment_method_types' => ['card'],
                 'line_items' => [[
                     'price_data' => [
                         'currency' => strtolower($currency),
-                        'product_data' => [
-                            'name' => $report_title,
-                            'description' => 'Digital Report Download',
-                        ],
+                        'product_data' => $product_data,
                         'unit_amount' => $amount,
                     ],
                     'quantity' => 1,

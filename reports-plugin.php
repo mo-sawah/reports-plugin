@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Reports Plugin
  * Description:       Adds a custom post type for "Reports" with custom fields, download form, and Stripe payments.
- * Version:           2.0.4
+ * Version:           2.0.5
  * Author:            Mohamed Sawah
  * Author URI:        https://sawahsolutions.com/
  * License:           GPL-2.0+
@@ -15,7 +15,7 @@ if ( ! defined( 'WPINC' ) ) {
     die;
 }
 
-define( 'RP_VERSION', '2.0.4' );
+define( 'RP_VERSION', '2.0.5' );
 define( 'RP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'RP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
